@@ -100,10 +100,6 @@ function App(): React.ReactElement {
       const response = await fetch(`${API_BASE_URL}/upload-pdfs/`, {
         method: "POST",
         body: formData,
-        headers: {
-          Accept: "application/json",
-        },
-        mode: "cors",
         credentials: "include",
       });
 
@@ -141,10 +137,6 @@ function App(): React.ReactElement {
       const response = await fetch(
         `${API_BASE_URL}/get-evaluated-pdf/${evaluationId}`,
         {
-          headers: {
-            Accept: "application/json",
-          },
-          mode: "cors",
           credentials: "include",
         }
       );
