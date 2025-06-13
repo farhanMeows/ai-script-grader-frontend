@@ -167,17 +167,32 @@ function App(): React.ReactElement {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
-      {/* Header with gradient and subtle pattern */}
-      <header className="relative bg-gradient-to-r from-blue-600 to-blue-800 py-8 shadow-lg">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNGMwLTIuMjA5IDEuNzkxLTQgNC00czQgMS43OTEgNCA0LTEuNzkxIDQtNCA0LTQtMS43OTEtNC00eiIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-10"></div>
-        <div className="container mx-auto px-4 relative">
-          <div className="flex flex-col items-center space-y-2">
-            <h1 className="text-3xl font-bold text-white tracking-tight">
-              AI Script Grader
-            </h1>
-            <p className="text-blue-100 text-sm font-medium">
-              Intelligent Answer Script Evaluation
-            </p>
+      {/* Header */}
+      <header className="bg-gray-900 border-b border-gray-800 py-4">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center space-x-3">
+            <svg
+              className="w-8 h-8 text-blue-500"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M12,2 L2,7 L12,12 L22,7 L12,2 Z" fill="currentColor" />
+              <path
+                d="M2,17 L12,22 L22,17"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <path
+                d="M2,12 L12,17 L22,12"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <circle cx="12" cy="7" r="2" fill="#1F2937" />
+            </svg>
+            <h1 className="text-xl font-semibold text-gray-100">Grader.ai</h1>
           </div>
         </div>
       </header>
