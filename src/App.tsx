@@ -47,14 +47,14 @@ function App(): React.ReactElement {
         eventSource?.close();
         setIsEvaluating(false);
         setUploadStatus("Evaluation completed");
-        if (
-          error instanceof Event &&
-          (error.target as EventSource).readyState === EventSource.CLOSED
-        ) {
-          setError(
-            "Connection to server lost. Please refresh the page and try again."
-          );
-        }
+        // if (
+        //   error instanceof Event &&
+        //   (error.target as EventSource).readyState === EventSource.CLOSED
+        // ) {
+        //   setError(
+        //     "Connection to server lost. Please refresh the page and try again."
+        //   );
+        // }
       };
     }
 
