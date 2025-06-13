@@ -8,6 +8,8 @@ interface UploadResponse {
   evaluation_id: string;
 }
 
+const API_BASE_URL = "https://ai-script-grader-backend.onrender.com";
+
 function App(): React.ReactElement {
   const [answerScript, setAnswerScript] = useState<File | null>(null);
   const [questionPaper, setQuestionPaper] = useState<File | null>(null);
@@ -30,7 +32,8 @@ function App(): React.ReactElement {
 
     if (evaluationId && isEvaluating) {
       eventSource = new EventSource(
-        `http://localhost:8000/evaluation-logs/${evaluationId}`
+        `${API_BASE_URL}/evaluation-logs/${evaluationId}`,
+        { withCredentials: true }
       );
 
       eventSource.onmessage = (event) => {
@@ -39,10 +42,19 @@ function App(): React.ReactElement {
         }
       };
 
-      eventSource.onerror = () => {
+      eventSource.onerror = (error) => {
+        console.error("SSE Error:", error);
         eventSource?.close();
         setIsEvaluating(false);
         setUploadStatus("Evaluation completed");
+        if (
+          error instanceof Event &&
+          (error.target as EventSource).readyState === EventSource.CLOSED
+        ) {
+          setError(
+            "Connection to server lost. Please refresh the page and try again."
+          );
+        }
       };
     }
 
@@ -85,15 +97,28 @@ function App(): React.ReactElement {
     formData.append("question_paper", questionPaper);
 
     try {
-      const response = await fetch("http://localhost:8000/upload-pdfs/", {
+      const response = await fetch(`${API_BASE_URL}/upload-pdfs/`, {
         method: "POST",
         body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+        mode: "cors",
+        credentials: "include",
       });
+
+      if (response.status === 502) {
+        throw new Error(
+          "Server is currently unavailable. Please try again in a few moments."
+        );
+      }
 
       const data: UploadResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Upload failed");
+        throw new Error(
+          data.message || `Upload failed (Status: ${response.status})`
+        );
       }
 
       setEvaluationId(data.evaluation_id);
@@ -114,9 +139,25 @@ function App(): React.ReactElement {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/get-evaluated-pdf/${evaluationId}`
+        `${API_BASE_URL}/get-evaluated-pdf/${evaluationId}`,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+          mode: "cors",
+          credentials: "include",
+        }
       );
-      if (!response.ok) throw new Error("Failed to download PDF");
+
+      if (response.status === 502) {
+        throw new Error(
+          "Server is currently unavailable. Please try again in a few moments."
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(`Failed to download PDF (Status: ${response.status})`);
+      }
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
